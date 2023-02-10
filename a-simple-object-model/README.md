@@ -3,6 +3,12 @@
 
 http://aosabook.org/en/500L/a-simple-object-model.html
 
+- 키워드
+  - Metaclass in OOP
+  - Descriptor protocol and description in Python
+  - The relation of `type` and `object` in Python
+  - Bound method
+
 ## Introduction
 - 객체 지향 언어들의 공통점
 	- 객체가 존재한다.
@@ -79,3 +85,28 @@ http://aosabook.org/en/500L/a-simple-object-model.html
 
 - bound method 구현: 속성을 딕셔너리에서 찾지 못하면 클래스에서 찾도록 코드를 수정해야 한다.
   - 클로저 사용해서 구현하면 된다.
+
+## 3. Meta-Object Protocols
+- 프로그램에서 직접 호출되는 normal 메서드와 더불어, 많은 동적 언어는 special 메서드를 지원한다.
+  - 직접 호출되는게 아니라 객체 시스템에 의해 호출되는 메서드
+- 파이썬에서는 `__xxx__`
+  - 오버라이드 가능
+  - Python's object model has [dozens of special methods](https://docs.python.org/2/reference/datamodel.html#special-method-names).
+- Meta-object protocol
+  - 스몰톡에서 도입
+
+- 메타 훅을 추가하겠다.
+  - 속성을 읽고 쓸 때 발생하는 일을 미세하게 조정하는데 사용한다.
+  - `__getattr__` and `__setattr__`
+
+### Customizing Reading and Writing and Attribute
+- `__getattr__`: 조회하는 속성을 일반적인 방법으로(인스턴스 or 클래스에서) 찾을 수 없을 때 호출된다.
+- `__setattr__`: 속성 값 셋팅할 때마다 호출된다. 
+
+### Descriptor Protocol
+- `__getattr__`와 `__setattr__`이 속성을 읽고 있는 객체에 대해 호출될 때, 디스크립터 프로토콜은 객체에서 속성을 가져온 결과에 대해 특수 메서드를 호출한다.
+- -> 메서드를 객체에 바인딩하는 일반화 + 실제로 메서드를 객체에 바인딩하는 건 디스크립터 프로토콜을 사용해 수행된다.
+- 파이썬에서의 유스케이스
+  - `staticmethod`
+  - `classmethod`
+  - `property`
