@@ -1,14 +1,6 @@
 MISSING = object()
 
 
-def _is_bindable(meth):
-    return hasattr(meth, "__get__")
-
-
-def _make_boundmethod(meth, self):
-    meth.__get__(self, None)
-
-
 class Base(object):
     """The base class that all of the object model classes inherit from."""
 
@@ -22,13 +14,11 @@ class Base(object):
         result = self._read_dict(fieldname)
         if result is not MISSING:
             return result
-
         result = self.cls._read_from_class(fieldname)
         if _is_bindable(result):
             return _make_boundmethod(result, self)
         if result is not MISSING:
             return result
-
         meth = self.cls._read_from_class("__getattr__")
         if meth is not MISSING:
             return meth(self, fieldname)
@@ -49,12 +39,24 @@ class Base(object):
         return meth(*args)
 
     def _read_dict(self, fieldname):
-        """read a field 'fieldname' out of the object's dict"""
+        """read an field 'fieldname' out of the object's dict"""
         return self._fields.get(fieldname, MISSING)
 
     def _write_dict(self, fieldname, value):
         """write a field 'fieldname' into the object's dict"""
         self._fields[fieldname] = value
+
+
+def _is_bindable(meth):
+    return hasattr(meth, "__get__")
+
+
+def _make_boundmethod(meth, self):
+    return meth.__get__(self, None)
+
+
+def OBJECT__setattr__(self, fieldname, value):
+    self._write_dict(fieldname, value)
 
 
 class Instance(Base):
@@ -88,13 +90,10 @@ class Class(Base):
         for cls in self.method_resolution_order():
             if methname in cls._fields:
                 return cls._fields[methname]
+        return MISSING
 
 
-def OBJECT__setattr__(self, fieldname, value):
-    self._write_dict(fieldname, value)
-
-
-# set up the base hierarchy as in Python (the ObjVLisp model)
+# set up the base hierarchy like in Python (the ObjVLisp model)
 # the ultimate base class is OBJECT
 OBJECT = Class(
     name="object",
