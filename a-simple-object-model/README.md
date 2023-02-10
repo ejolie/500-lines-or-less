@@ -8,6 +8,8 @@ http://aosabook.org/en/500L/a-simple-object-model.html
   - Descriptor protocol and description in Python
   - The relation of `type` and `object` in Python
   - Bound method
+  - maps
+  - JIT Compiler
 
 ## Introduction
 - 객체 지향 언어들의 공통점
@@ -110,3 +112,15 @@ http://aosabook.org/en/500L/a-simple-object-model.html
   - `staticmethod`
   - `classmethod`
   - `property`
+
+## 4. Instance Optimization
+- maps
+  - Self 언어의 VM에서 도입됨. 중요한 객체 모델 최적화 방법 중 하나.
+  - PyPy, V8과 같은 모던 JS VM(여기서는 hidden classes라고 부름)에서 사용됨
+
+- 모든 인스턴스들이 속성을 저장하기 위해 딕셔너리를 사용한다.
+  - 같은 클래스의 인스턴스들은 같은 키를 가진 딕셔너리를 갖고 있다.
+- 모든 인스턴스의 딕셔너리를 두 파트로 쪼갠다.
+  - 1) 같은 속성명을 가진 모든 인스턴스 사이에 공유하는 keys(map)를 저장하는 부분
+    - 그러면 인스턴스는 map에 대한 레퍼런스만 갖고 있고, 값은 list에 담아둘 수 있다. 
+  - 2) 
