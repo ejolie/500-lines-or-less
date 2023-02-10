@@ -59,3 +59,23 @@ http://aosabook.org/en/500L/a-simple-object-model.html
 
 ### Calling Methods
 - 객체에 호출되니 메서드의 구현을 찾기 위해서는 그 객체 클래스의 MRO를 거슬러 올라가 찾아야 한다. MRO에 있는 클래스 중 하나의 딕셔너리에서 찾아진 첫번째 메서드가 호출된다.
+
+## 2. Attribute-Based Model
+- method-based model과 attribute-based model의 구분을 하겠다.
+  - Smalltalk, Ruby, JavaScript와 Python, Lua의 차이 중 하나다.
+- method-based model은 프로그램 실행의 기본 요소인 메서드 호출이 있다.
+  ```python
+      result = obj.f(arg1, arg2)
+  ```
+- attribute-based model은 메서드 호출을 두 단계로 쪼갠다. 1) attribute 조회, 2) 결과 호출
+  ```python
+      method = obj.f
+	  result = method(arg1, arg2)
+  ```
+
+- 메서드 호출 방식이 다르다.
+  - 1) 객체에서 메서드명의 속성 조회 -> 결과는 bound method: 해당 객체와 클래스에서 찾은 함수를 캡슐화
+  - 2) bound method 호출
+
+- bound method 구현: 속성을 딕셔너리에서 찾지 못하면 클래스에서 찾도록 코드를 수정해야 한다.
+  - 클로저 사용해서 구현하면 된다.
