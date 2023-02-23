@@ -1,2 +1,4 @@
 # 500-lines-or-less
-http://aosabook.org/
+
+- Web page: http://aosabook.org/
+- GitHub: https://github.com/aosabook/500lines
